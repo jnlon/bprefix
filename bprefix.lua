@@ -1,20 +1,19 @@
 #!/usr/bin/env lua
 
--- bprefix.lua - Display byte sizes formatted with IEC and SI binary prefixes
+-- bprefix.lua - Display byte sizes formatted with IEC and SI unit prefixes
 -- from standard input or command-line arguments
 
--- PREFIXES - Lookup table for 1-9 Binary Prefix units
+-- PREFIXES - Lookup table for 1-8 unit prefixes
 -- See: https://en.wikipedia.org/wiki/Binary_prefix
 PREFIXES = {
 	[1] = 'K',
 	[2] = 'M',
 	[3] = 'G',
-	[4] = 'M',
-	[5] = 'T',
-	[6] = 'P',
-	[7] = 'E',
-	[8] = 'Z',
-	[9] = 'Y'
+	[4] = 'T',
+	[5] = 'P',
+	[6] = 'E',
+	[7] = 'Z',
+	[8] = 'Y'
 }
 
 -- Implement log function with a paramaterized base value
@@ -30,9 +29,9 @@ function trunc(num)
 	return tonumber(whole_portion)
 end
 
--- Format a decimal number with a prefix computed based on function
--- arguments. This is a generic method use by both format_si and format_iec.
--- 
+-- Format a decimal number with a prefixed string based on function arguments.
+-- This is a generic method use by both format_si and format_iec.
+--
 -- num: a whole decimal number to format
 -- base: the number system used by 'num' (eg. 10 for decimal/SI or 2 for binary/IEC)
 -- divisor: a divisor adjusting logn(num, base) so it produces an index usable against the 'PREFIXES' table
@@ -67,9 +66,8 @@ function format_iec(num)
 	return format_prefix_generic(num, 2, 10, 'ib')
 end
 
--- Given a string value containing a decimal, format and return a string
--- showing the original value, the value formatted with an Si Prefix, and the
--- value formatted with an IEC prefix
+-- Format and return a string from a decimal containing the original and
+-- Si/IEC prefixed versions
 function format_main(str)
 	local num = tonumber(str)
 	if (num == nil) then
@@ -84,7 +82,7 @@ end
 function process_stdin()
 	line = io.read()
 	while line do
-		print(format_main(line, false))
+		print(format_main(line))
 		line = io.read()
 	end
 end
@@ -92,7 +90,7 @@ end
 -- Format and print line-separated values from command-line arguments
 function process_argv()
 	for i = 1, #arg do
-		print(format_main(arg[i], eic))
+		print(format_main(arg[i]))
 	end
 end
 
